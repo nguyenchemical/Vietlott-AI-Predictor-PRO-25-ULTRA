@@ -3,12 +3,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Vietlott AI Predictor PRO 18</title><style>
+
 body{
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial;
 margin:0;
-text-align:center;
 background:#0f172a;
 color:white;
+text-align:center;
 }
 
 .light{
@@ -17,32 +18,57 @@ color:black;
 }
 
 .container{
-max-width:700px;
+max-width:720px;
 margin:auto;
 padding:20px;
 }
 
+/* GAME BOX */
+
+.gamebox{
+border:2px solid gold;
+border-radius:15px;
+padding:15px;
+margin-top:15px;
+}
+
+/* BUTTON */
+
 button{
-padding:10px 16px;
+padding:12px 18px;
 margin:6px;
 border:none;
 border-radius:20px;
 background:gold;
+color:black;
 font-weight:bold;
+font-size:15px;
 cursor:pointer;
 }
 
+/* RESULT BALL */
+
 .ball{
 display:inline-block;
-width:46px;
-height:46px;
-line-height:46px;
+width:48px;
+height:48px;
+line-height:48px;
 border-radius:50%;
 background:gold;
 color:black;
 font-weight:bold;
-margin:5px;
+margin:6px;
 }
+
+/* LINK STATUS */
+
+.status{
+color:#22c55e;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* POPUP */
 
 .popup{
 position:fixed;
@@ -50,7 +76,7 @@ top:0;
 left:0;
 right:0;
 bottom:0;
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.75);
 display:none;
 align-items:center;
 justify-content:center;
@@ -58,23 +84,37 @@ justify-content:center;
 
 .popup-box{
 background:#1e293b;
-padding:20px;
-border-radius:10px;
+padding:35px;
+border-radius:15px;
+width:85%;
+max-width:500px;
 }
 
-#firework{
+select{
+padding:10px;
+margin:6px;
+font-size:18px;
+}
+
+#result{
+margin-top:20px;
+min-height:70px;
+}
+
+/* FIREWORK */
+
+canvas{
 position:fixed;
 top:0;
 left:0;
-width:100%;
-height:100%;
 pointer-events:none;
 }
+
 </style></head><body><canvas id="firework"></canvas>
 
-<div class="container"><h2>Vietlott AI Predictor PRO 18</h2><div onclick="openVietlott()" style="cursor:pointer">
-Đang kết nối thời gian thực Vietlott
-</div><br><button onclick="predictMega()">Mega 6/45</button>
+<div class="container"><h2>Vietlott AI Predictor PRO 18</h2><div class="status" onclick="openVietlott()">
+✓ Đang kết nối thời gian thực đến Vietlott
+</div><div class="gamebox"><h3>Dự đoán Vietlott</h3><button onclick="predictMega()">Mega 6/45</button>
 <button onclick="predictPower()">Power 6/55</button>
 
 <button onclick="predictKeno()">Keno</button>
@@ -92,38 +132,49 @@ pointer-events:none;
 <br><button onclick="openBirth()">Tạo theo ngày sinh</button>
 <button onclick="toggleTheme()">Light / Dark</button>
 
-<div id="result" style="margin-top:20px"></div></div><div class="popup" id="birthPopup">
-<div class="popup-box"><h3>Chọn ngày sinh</h3><select id="day"></select>
+</div><div id="result"></div></div><!-- POPUP --><div class="popup" id="birthPopup"><div class="popup-box"><h2>Chọn ngày sinh</h2><select id="day"></select>
 <select id="month"></select>
 <select id="year"></select>
 
 <br><br>
 
-<button onclick="generateBirth()">Tạo số</button>
+<button onclick="generateBirth()">Tạo bộ số</button>
 <button onclick="closeBirth()">Đóng</button>
 
-</div>
-</div><script>
+</div></div><script>
 
 /* SOUND */
 
 function playSound(){
-let ctx = new (window.AudioContext || window.webkitAudioContext)()
-let o = ctx.createOscillator()
-o.type="sine"
-o.frequency.value=700
+
+const ctx = new (window.AudioContext || window.webkitAudioContext)()
+
+const o = ctx.createOscillator()
+
+o.type="triangle"
+o.frequency.value=650
+
 o.connect(ctx.destination)
+
 o.start()
-setTimeout(()=>o.stop(),120)
+
+setTimeout(()=>o.stop(),150)
+
 }
 
 /* VIBRATION */
 
 function vibrate(){
-if(navigator.vibrate) navigator.vibrate(120)
+
+if("vibrate" in navigator){
+
+navigator.vibrate(120)
+
 }
 
-/* RANDOM UNIQUE */
+}
+
+/* RANDOM */
 
 function randomUnique(max,count){
 
@@ -141,7 +192,7 @@ return arr.sort((a,b)=>a-b)
 
 }
 
-/* SHOW NUMBERS */
+/* SHOW */
 
 function showNumbers(nums,power){
 
@@ -157,7 +208,9 @@ r.innerHTML+=`<div class="ball">${n}</div>`
 })
 
 if(power){
+
 r.innerHTML+=`<div class="ball" style="background:red;color:white">${power}</div>`
+
 }
 
 firework()
@@ -175,7 +228,7 @@ firework()
 
 }
 
-/* MEGA */
+/* GAMES */
 
 function predictMega(){
 
@@ -183,47 +236,21 @@ showNumbers(randomUnique(45,6))
 
 }
 
-/* POWER */
-
 function predictPower(){
 
 let nums=randomUnique(55,6)
 
-let remain=[]
-
-for(let i=1;i<=55;i++){
-if(!nums.includes(i)) remain.push(i)
-}
-
-let power=remain[Math.floor(Math.random()*remain.length)]
+let power=Math.floor(Math.random()*55)+1
 
 showNumbers(nums,power)
 
 }
-
-/* JACKPOT */
-
-function jackpotMega(){
-
-predictMega()
-
-}
-
-function jackpotPower(){
-
-predictPower()
-
-}
-
-/* KENO */
 
 function predictKeno(){
 
 showNumbers(randomUnique(80,10))
 
 }
-
-/* MAX 3D */
 
 function predictMax3D(){
 
@@ -244,14 +271,9 @@ showText(a+" | "+b)
 
 function predictMax3DPro(){
 
-let a=Math.floor(Math.random()*1000).toString().padStart(3,"0")
-let b=Math.floor(Math.random()*1000).toString().padStart(3,"0")
-
-showText(a+" | "+b)
+predictMax3DPlus()
 
 }
-
-/* BINGO */
 
 function predictBingo(){
 
@@ -259,11 +281,23 @@ showNumbers(randomUnique(90,18))
 
 }
 
-/* LOTTO */
-
 function predictLotto(){
 
 showNumbers(randomUnique(35,5))
+
+}
+
+/* JACKPOT */
+
+function jackpotMega(){
+
+predictMega()
+
+}
+
+function jackpotPower(){
+
+predictPower()
 
 }
 
@@ -275,7 +309,7 @@ document.body.classList.toggle("light")
 
 }
 
-/* VIETLOTT */
+/* LINK */
 
 function openVietlott(){
 
@@ -301,9 +335,9 @@ document.getElementById("birthPopup").style.display="none"
 
 function generateBirth(){
 
-let d=document.getElementById("day").value
-let m=document.getElementById("month").value
-let y=document.getElementById("year").value
+let d=day.value
+let m=month.value
+let y=year.value
 
 let seed=parseInt(d)+parseInt(m)+parseInt(y)
 
@@ -312,6 +346,7 @@ let nums=[]
 while(nums.length<6){
 
 let n=(seed*Math.random()*100)%45
+
 n=Math.floor(n)+1
 
 if(!nums.includes(n)) nums.push(n)
@@ -327,15 +362,21 @@ closeBirth()
 /* DROPDOWN */
 
 for(let i=1;i<=31;i++){
+
 day.innerHTML+=`<option>${i}</option>`
+
 }
 
 for(let i=1;i<=12;i++){
+
 month.innerHTML+=`<option>${i}</option>`
+
 }
 
-for(let i=1950;i<=2030;i++){
+for(let i=1950;i<=2035;i++){
+
 year.innerHTML+=`<option>${i}</option>`
+
 }
 
 /* FIREWORK */
@@ -378,6 +419,7 @@ p.vy+=0.1
 p.life--
 
 ctx.fillStyle="gold"
+
 ctx.fillRect(p.x,p.y,3,3)
 
 })
