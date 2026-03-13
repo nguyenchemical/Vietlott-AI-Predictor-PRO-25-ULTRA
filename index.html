@@ -1,15 +1,15 @@
 <!DOCTYPE html><html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Dự Đoán Vietlott AI PRO 22</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="ico.png"><style>
+<title>Trợ Lý Dự Đoán Vietlott AI ULTRA</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="icon.png"><style>
 
 body{
 margin:0;
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial,Helvetica;
 text-align:center;
 color:#111;
 
-background:linear-gradient(270deg,#ffffff,#e6f3ff,#f8fbff,#ffffff);
+background:linear-gradient(270deg,#ffffff,#e9f6ff,#fdfefe,#ffffff);
 background-size:600% 600%;
 animation:bgmove 18s infinite;
 }
@@ -20,20 +20,18 @@ animation:bgmove 18s infinite;
 100%{background-position:0% 50%}
 }
 
-/* Splash */
-
 #splash{
 position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:#000;
+background:black;
 color:white;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:32px;
+font-size:34px;
 z-index:9999;
 animation:splashfade 2.5s forwards;
 }
@@ -44,10 +42,12 @@ animation:splashfade 2.5s forwards;
 100%{opacity:0;visibility:hidden}
 }
 
-/* Header */
-
-.header{
+.logo{
 margin-top:20px;
+}
+
+.logo img{
+width:80px;
 }
 
 .clock{
@@ -56,7 +56,7 @@ margin-top:5px;
 }
 
 .status{
-margin-top:5px;
+margin-top:6px;
 font-size:15px;
 }
 
@@ -72,15 +72,13 @@ animation:blink 1s infinite;
 
 @keyframes blink{
 0%{opacity:1}
-50%{opacity:0.2}
+50%{opacity:0.3}
 100%{opacity:1}
 }
 
-/* Result */
-
 .resultTitle{
 font-size:22px;
-margin-top:20px;
+margin-top:15px;
 font-weight:bold;
 }
 
@@ -100,14 +98,13 @@ font-size:20px;
 font-weight:bold;
 background:#ffd700;
 color:black;
+box-shadow:0 0 10px gold;
 }
 
 .power{
 background:red;
 color:white;
 }
-
-/* Buttons */
 
 .buttons{
 position:fixed;
@@ -125,24 +122,9 @@ color:white;
 font-size:15px;
 }
 
-/* Jackpot meter */
-
-.meter{
-width:80%;
-height:14px;
-background:#ccc;
-margin:15px auto;
-border-radius:10px;
-overflow:hidden;
+canvas{
+margin-top:15px;
 }
-
-.meterbar{
-height:100%;
-width:40%;
-background:red;
-}
-
-/* Firework */
 
 .fire{
 position:fixed;
@@ -160,34 +142,24 @@ animation:rocket 1.2s ease-out forwards;
 }
 
 </style></head><body><div id="splash">
-🚀 Vietlott AI Predictor
-</div><div class="header"><h2>Vietlott AI Predictor</h2><div class="clock" id="clock"></div><div class="status">
+🎰 Vietlott AI ULTRA
+</div><div class="logo">
+<img src="icon.png">
+<h2>Trợ Lý Dự Đoán Vietlott AI</h2>
+</div><div class="clock" id="clock"></div><div class="status">
 <span class="led"></span>
-Kết nối thời gian thực tới Vietlott
-</div></div><div>🎯 Jackpot Meter AI
-
-<div class="meter">
-<div id="meterbar" class="meterbar"></div>
-</div><div id="percent">40%</div></div><div class="resultTitle" id="gameTitle">
+Kết nối thời gian thực Vietlott
+</div><div class="resultTitle" id="gameTitle">
 Kết quả dự đoán
 </div><div class="result" id="result">
-Nhấn nút để bắt đầu
-</div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
+Nhấn nút để quay
+</div><canvas id="chart" width="300" height="120"></canvas>
+
+<div id="heatmap"></div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
 <button onclick="power()">Power 6/55</button>
-<button onclick="jackpotMega()">AI Jackpot Mega</button>
-<button onclick="jackpotPower()">AI Jackpot Power</button>
-
-<br><button onclick="bingo()">Bingo 18</button>
-<button onclick="keno()">Keno</button>
-<button onclick="lotto()">Lotto 5/35</button>
-
-<br><button onclick="max3d()">Max 3D</button>
-<button onclick="max3dplus()">Max 3D+</button>
-<button onclick="max3dpro()">Max 3D Pro</button>
+<button onclick="spin()">🎰 Máy quay số</button>
 
 </div><script>
-
-/* CLOCK */
 
 function clock(){
 
@@ -202,13 +174,11 @@ let m=d.getMinutes().toString().padStart(2,'0')
 let s=d.getSeconds().toString().padStart(2,'0')
 
 document.getElementById("clock").innerText=
-day+"/"+month+"/"+year+"  "+h+":"+m+":"+s
+day+"/"+month+"/"+year+" "+h+":"+m+":"+s
 
 }
 
 setInterval(clock,1000)
-
-/* RANDOM */
 
 function rand(max){
 return Math.floor(Math.random()*max)+1
@@ -227,9 +197,8 @@ if(!arr.includes(n)) arr.push(n)
 }
 
 return arr
-}
 
-/* SHOW RESULT */
+}
 
 function show(nums,power,title){
 
@@ -242,11 +211,8 @@ r.innerHTML=""
 nums.forEach(n=>{
 
 let b=document.createElement("div")
-
 b.className="ball"
-
 b.innerText=n
-
 r.appendChild(b)
 
 })
@@ -254,11 +220,8 @@ r.appendChild(b)
 if(power){
 
 let p=document.createElement("div")
-
 p.className="ball power"
-
 p.innerText=power
-
 r.appendChild(p)
 
 }
@@ -266,44 +229,39 @@ r.appendChild(p)
 sound()
 vibrate()
 firework()
-meter()
+chart()
 
 }
 
-/* GAME FUNCTIONS */
+function mega(){
+show(unique(6,45),null,"Mega 6/45")
+}
 
-function mega(){ show(unique(6,45),null,"Mega 6/45") }
+function power(){
+show(unique(6,55),rand(55),"Power 6/55")
+}
 
-function power(){ show(unique(6,55),rand(55),"Power 6/55") }
+function spin(){
 
-function jackpotMega(){ show(unique(6,45),null,"AI Jackpot Mega") }
+document.getElementById("gameTitle").innerText="🎰 Máy quay số Vietlott"
 
-function jackpotPower(){ show(unique(6,55),rand(55),"AI Jackpot Power") }
+let r=document.getElementById("result")
 
-function bingo(){ show(unique(5,18),null,"Bingo 18") }
+r.innerHTML="🎰 Đang quay..."
 
-function keno(){ show(unique(10,80),null,"Keno") }
+setTimeout(()=>{
+mega()
+},2000)
 
-function lotto(){ show(unique(5,35),null,"Lotto 5/35") }
-
-function max3d(){ show([rand(9),rand(9),rand(9)],null,"Max 3D") }
-
-function max3dplus(){ show([rand(9),rand(9),rand(9),rand(9)],null,"Max 3D+") }
-
-function max3dpro(){ show([rand(9),rand(9),rand(9),rand(9),rand(9)],null,"Max 3D Pro") }
-
-/* FIREWORK */
+}
 
 function firework(){
 
 for(let i=0;i<20;i++){
 
 let f=document.createElement("div")
-
 f.className="fire"
-
 f.style.left=Math.random()*100+"%"
-
 document.body.appendChild(f)
 
 setTimeout(()=>f.remove(),1200)
@@ -312,49 +270,65 @@ setTimeout(()=>f.remove(),1200)
 
 }
 
-/* SOUND */
-
 function sound(){
 
 let ctx=new (window.AudioContext||window.webkitAudioContext)()
 
 let o=ctx.createOscillator()
-
 let g=ctx.createGain()
 
 o.connect(g)
-
 g.connect(ctx.destination)
 
 o.frequency.value=700
-
 o.start()
 
 g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+0.5)
 
 }
 
-/* VIBRATE */
-
 function vibrate(){
 
 if(navigator.vibrate){
-
 navigator.vibrate([200,100,200])
-
 }
 
 }
 
-/* JACKPOT METER */
+function chart(){
 
-function meter(){
+let c=document.getElementById("chart")
+let ctx=c.getContext("2d")
 
-let p=Math.floor(Math.random()*100)
+ctx.clearRect(0,0,300,120)
 
-document.getElementById("percent").innerText=p+"%"
+for(let i=0;i<20;i++){
 
-document.getElementById("meterbar").style.width=p+"%"
+let x=i*15
+let h=Math.random()*100
+
+ctx.fillStyle="#007bff"
+ctx.fillRect(x,120-h,10,h)
+
+}
+
+heatmap()
+
+}
+
+function heatmap(){
+
+let h="🔥 Heatmap: "
+
+for(let i=1;i<=10;i++){
+
+let v=Math.floor(Math.random()*100)
+
+h+=i+"("+v+"%) "
+
+}
+
+document.getElementById("heatmap").innerText=h
 
 }
 
