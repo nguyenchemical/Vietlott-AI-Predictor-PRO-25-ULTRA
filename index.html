@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Vietlott AI Predictor PRO 25 MEGA</title><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="icon.png"><style>
+<head><meta charset="UTF-8">
+<title>Trợ Lý Dự Đoán Vietlott AI QUANTUM</title><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png"><meta name="theme-color" content="#000000"><style>
 
 body{
 margin:0;
@@ -20,43 +20,35 @@ animation:bgmove 20s infinite;
 100%{background-position:0% 50%}
 }
 
+#splash{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:34px;
+z-index:9999;
+animation:splashfade 3s forwards;
+}
+
+@keyframes splashfade{
+0%{opacity:1}
+80%{opacity:1}
+100%{opacity:0;visibility:hidden}
+}
+
 .logo img{
 width:80px;
 margin-top:20px;
 }
 
-.clock{
-margin-top:5px;
-font-size:16px;
-}
-
-.status{
-margin-top:6px;
-}
-
-.led{
-display:inline-block;
-width:10px;
-height:10px;
-background:#00ff00;
-border-radius:50%;
-margin-right:6px;
-animation:blink 1s infinite;
-}
-
-@keyframes blink{
-0%{opacity:1}
-50%{opacity:0.3}
-100%{opacity:1}
-}
-
-.resultTitle{
-font-size:22px;
-margin-top:15px;
-}
-
 .result{
-margin-top:10px;
+margin-top:20px;
 min-height:120px;
 }
 
@@ -71,37 +63,12 @@ font-size:20px;
 font-weight:bold;
 background:gold;
 color:black;
-box-shadow:0 0 10px gold;
+box-shadow:0 0 12px gold;
 }
 
 .power{
 background:red;
 color:white;
-}
-
-.meter{
-width:80%;
-height:12px;
-background:#444;
-margin:15px auto;
-border-radius:10px;
-overflow:hidden;
-}
-
-.meterbar{
-height:100%;
-width:40%;
-background:red;
-}
-
-canvas{
-margin-top:10px;
-}
-
-.buttons{
-position:fixed;
-bottom:10px;
-width:100%;
 }
 
 button{
@@ -111,6 +78,27 @@ border:none;
 border-radius:20px;
 background:gold;
 color:black;
+}
+
+.buttons{
+position:fixed;
+bottom:10px;
+width:100%;
+}
+
+.meter{
+width:80%;
+height:12px;
+background:#333;
+margin:15px auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.meterbar{
+height:100%;
+width:30%;
+background:red;
 }
 
 .fire{
@@ -128,24 +116,38 @@ animation:rocket 1.2s ease-out forwards;
 100%{transform:translateY(-100vh)}
 }
 
-</style></head><body><div class="logo">
+.popup{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#222;
+padding:20px;
+border-radius:10px;
+display:none;
+}
+
+</style></head><body><div id="splash">🎰 Vietlott AI QUANTUM</div><div class="logo">
 <img src="icon.png">
-<h2>Vietlott AI Predictor</h2>
-</div><div class="clock" id="clock"></div><div class="status">
-<span class="led"></span>
-Kết nối dữ liệu Vietlott
+<h2>Trợ Lý Dự Đoán Vietlott AI</h2>
 </div>🎯 Jackpot Meter AI
 
 <div class="meter">
 <div id="meterbar" class="meterbar"></div>
-</div><div id="percent">40%</div><div class="resultTitle" id="gameTitle">
-Kết quả dự đoán
-</div><div class="result" id="result">
-Nhấn nút để bắt đầu
-</div><canvas id="chart" width="320" height="120"></canvas>
-<canvas id="wheel" width="200" height="200"></canvas>
+</div><div id="percent">40%</div><div id="result" class="result">
+Nhấn nút để dự đoán
+</div><button onclick="birth()">🎂 Dự đoán theo ngày sinh</button>
 
-<div id="heatmap"></div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
+<div id="birthPopup" class="popup"><h3>Chọn ngày sinh</h3><select id="day"></select>
+<select id="month"></select>
+<select id="year"></select>
+
+<br><br>
+
+<button onclick="predictBirth()">Dự đoán</button>
+<button onclick="closeBirth()">Đóng</button>
+
+</div><div class="buttons"><button onclick="mega()">Mega 6/45</button>
 <button onclick="power()">Power 6/55</button>
 <button onclick="bingo()">Bingo 18</button>
 <button onclick="keno()">Keno</button>
@@ -155,32 +157,7 @@ Nhấn nút để bắt đầu
 <button onclick="max3dplus()">Max 3D+</button>
 <button onclick="max3dpro()">Max 3D Pro</button>
 
-<br><button onclick="spin()">🎰 Máy quay số</button>
-
 </div><script>
-
-/* CLOCK */
-
-function clock(){
-
-let d=new Date()
-
-let day=d.getDate().toString().padStart(2,'0')
-let month=(d.getMonth()+1).toString().padStart(2,'0')
-let year=d.getFullYear()
-
-let h=d.getHours().toString().padStart(2,'0')
-let m=d.getMinutes().toString().padStart(2,'0')
-let s=d.getSeconds().toString().padStart(2,'0')
-
-document.getElementById("clock").innerText=
-day+"/"+month+"/"+year+" "+h+":"+m+":"+s
-
-}
-
-setInterval(clock,1000)
-
-/* RANDOM */
 
 function rand(max){
 return Math.floor(Math.random()*max)+1
@@ -199,13 +176,10 @@ if(!arr.includes(n)) arr.push(n)
 }
 
 return arr
+
 }
 
-/* SHOW RESULT */
-
-function show(nums,power,title){
-
-document.getElementById("gameTitle").innerText="🎰 "+title
+function show(nums,power){
 
 let r=document.getElementById("result")
 
@@ -230,57 +204,20 @@ r.appendChild(p)
 }
 
 meter()
-chart()
-heatmap()
 firework()
 sound()
 vibrate()
 
 }
 
-/* GAMES */
-
-function mega(){ show(unique(6,45),null,"Mega 6/45") }
-
-function power(){ show(unique(6,55),rand(55),"Power 6/55") }
-
-function bingo(){ show(unique(5,18),null,"Bingo 18") }
-
-function keno(){ show(unique(10,80),null,"Keno") }
-
-function lotto(){ show(unique(5,35),null,"Lotto 5/35") }
-
-function max3d(){ show([rand(9),rand(9),rand(9)],null,"Max 3D") }
-
-function max3dplus(){ show([rand(9),rand(9),rand(9),rand(9)],null,"Max 3D+") }
-
-function max3dpro(){ show([rand(9),rand(9),rand(9),rand(9),rand(9)],null,"Max 3D Pro") }
-
-/* WHEEL SIMULATION */
-
-function spin(){
-
-document.getElementById("gameTitle").innerText="🎰 Máy quay Vietlott"
-
-let c=document.getElementById("wheel")
-let ctx=c.getContext("2d")
-
-ctx.clearRect(0,0,200,200)
-
-for(let i=0;i<20;i++){
-
-ctx.beginPath()
-ctx.arc(100,100,80,0,Math.PI*2)
-ctx.strokeStyle="gold"
-ctx.stroke()
-
-}
-
-setTimeout(()=>mega(),2000)
-
-}
-
-/* JACKPOT METER */
+function mega(){show(unique(6,45))}
+function power(){show(unique(6,55),rand(55))}
+function bingo(){show(unique(5,18))}
+function keno(){show(unique(10,80))}
+function lotto(){show(unique(5,35))}
+function max3d(){show([rand(9),rand(9),rand(9)])}
+function max3dplus(){show([rand(9),rand(9),rand(9),rand(9)])}
+function max3dpro(){show([rand(9),rand(9),rand(9),rand(9),rand(9)])}
 
 function meter(){
 
@@ -291,45 +228,6 @@ document.getElementById("percent").innerText=p+"%"
 document.getElementById("meterbar").style.width=p+"%"
 
 }
-
-/* CHART */
-
-function chart(){
-
-let c=document.getElementById("chart")
-let ctx=c.getContext("2d")
-
-ctx.clearRect(0,0,320,120)
-
-for(let i=0;i<20;i++){
-
-let x=i*15
-let h=Math.random()*100
-
-ctx.fillStyle="cyan"
-ctx.fillRect(x,120-h,10,h)
-
-}
-
-}
-
-/* HEATMAP */
-
-function heatmap(){
-
-let t="🔥 Heatmap số nóng: "
-
-for(let i=1;i<=10;i++){
-
-t+=i+"("+Math.floor(Math.random()*100)+"%) "
-
-}
-
-document.getElementById("heatmap").innerText=t
-
-}
-
-/* EFFECTS */
 
 function firework(){
 
@@ -369,6 +267,52 @@ function vibrate(){
 if(navigator.vibrate){
 navigator.vibrate([200,100,200])
 }
+
+}
+
+/* BIRTH */
+
+function birth(){
+
+document.getElementById("birthPopup").style.display="block"
+
+}
+
+function closeBirth(){
+
+document.getElementById("birthPopup").style.display="none"
+
+}
+
+function predictBirth(){
+
+show(unique(6,45))
+
+}
+
+/* FILL SELECT */
+
+for(let i=1;i<=31;i++){
+
+let o=document.createElement("option")
+o.text=i
+day.add(o)
+
+}
+
+for(let i=1;i<=12;i++){
+
+let o=document.createElement("option")
+o.text=i
+month.add(o)
+
+}
+
+for(let i=1950;i<=2025;i++){
+
+let o=document.createElement("option")
+o.text=i
+year.add(o)
 
 }
 
